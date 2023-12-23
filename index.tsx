@@ -29,9 +29,8 @@ export let timezones: Record<string, string | null> = {};
 const classes = findByPropsLazy("timestamp", "compact", "content");
 
 export const settings = definePluginSettings({
-    format24h: {
+    "24h Time": {
         type: OptionType.BOOLEAN,
-        name: "24h Time",
         description: "Show time in 24h format",
         default: false
     },
@@ -40,7 +39,7 @@ export const settings = definePluginSettings({
 function getTime(timezone: string, props: Intl.DateTimeFormatOptions = {}) {
     const date = new Date();
     const formatter = new Intl.DateTimeFormat("en-US", {
-        hour12: !settings.store.format24h,
+        hour12: !settings.store["24h Time"],
         timeZone: timezone,
         ...props
     });
@@ -61,7 +60,7 @@ const TimestampComponent = ErrorBoundary.wrap(({ userId, type }: { userId: strin
     return (
         <Tooltip
             position="top"
-            // @ts-expect-error
+            // @ts-ignore
             delay={750}
             allowOverflow={false}
             spacing={8}
@@ -116,8 +115,8 @@ export default definePlugin({
     ],
     settings,
 
-    renderProfileTimezone: (props: any) => <TimestampComponent userId={props.user.id} type="profile" />,
-    renderMessageTimezone: (props: any) => <TimestampComponent userId={props.message.author.id} type="message" />,
+    renderProfileTimezone: (props: any) => <TimestampComponent userId={props?.user?.id} type="profile" />,
+    renderMessageTimezone: (props: any) => <TimestampComponent userId={props?.message?.author?.id} type="message" />,
 
     start() {
         addContextMenuPatch("user-context", userContextMenuPatch);
