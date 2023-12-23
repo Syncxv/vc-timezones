@@ -61,6 +61,8 @@ const TimestampComponent = ErrorBoundary.wrap(({ userId, type }: { userId: strin
     return (
         <Tooltip
             position="top"
+            // @ts-expect-error
+            delay={750}
             allowOverflow={false}
             spacing={8}
             hideOnClick={true}
