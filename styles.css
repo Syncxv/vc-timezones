@@ -10,6 +10,10 @@
     color: var(--text-normal);
 }
 
+[class*="topSection"] .timezone-profile-item {
+    margin: 16px;
+}
+
 .timezone-message-item {
     margin-left: 4px;
 }
