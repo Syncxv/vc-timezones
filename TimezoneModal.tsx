@@ -53,17 +53,7 @@ export function SetTimezoneModal({ userId, modalProps }: { userId: string, modal
                 </section>
             </ModalContent>
 
-            <ModalFooter>
-                <Button
-                    color={Button.Colors.PRIMARY}
-                    disabled={currentValue === null}
-                    onClick={async () => {
-                        await setUserTimezone(userId, currentValue!);
-                        modalProps.onClose();
-                    }}
-                >
-                    Save
-                </Button>
+            <ModalFooter className={cl("modal-footer")}>
                 <Button
                     color={Button.Colors.RED}
                     onClick={async () => {
@@ -72,6 +62,16 @@ export function SetTimezoneModal({ userId, modalProps }: { userId: string, modal
                     }}
                 >
                     Delete Timezone
+                </Button>
+                <Button
+                    color={Button.Colors.BRAND}
+                    disabled={currentValue === null}
+                    onClick={async () => {
+                        await setUserTimezone(userId, currentValue!);
+                        modalProps.onClose();
+                    }}
+                >
+                    Save
                 </Button>
             </ModalFooter>
         </ModalRoot>

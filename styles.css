@@ -30,3 +30,7 @@
 .vc-timezone-modal-content {
     padding: 1em;
 }
+
+.vc-timezone-modal-footer {
+    gap: 16px;
+}
