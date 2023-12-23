@@ -60,6 +60,11 @@ const TimestampComponent = ErrorBoundary.wrap(({ userId, type }: { userId: strin
     const shortTime = getTime(timezone, { hour: "numeric", minute: "numeric" });
     return (
         <Tooltip
+            position="top"
+            allowOverflow={false}
+            spacing={8}
+            hideOnClick={true}
+            tooltipClassName="timezone-tooltip"
             text={getTime(timezone, {
                 weekday: "long",
                 year: "numeric",

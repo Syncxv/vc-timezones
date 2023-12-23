@@ -34,3 +34,8 @@
 .vc-timezone-modal-footer {
     gap: 16px;
 }
+
+.timezone-tooltip {
+    max-width: none!important;
+    white-space: nowrap
+}
