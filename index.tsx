@@ -15,7 +15,7 @@ import { openModal } from "@utils/modal";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy } from "@webpack";
 import { Menu, Tooltip } from "@webpack/common";
-import { User } from "discord-types/general";
+import { Message, User } from "discord-types/general";
 
 import { SetTimezoneModal } from "./TimezoneModal";
 
@@ -36,8 +36,8 @@ export const settings = definePluginSettings({
     },
 });
 
-function getTime(timezone: string, props: Intl.DateTimeFormatOptions = {}) {
-    const date = new Date();
+function getTime(timezone: string, timestamp: string | number, props: Intl.DateTimeFormatOptions = {}) {
+    const date = new Date(timestamp);
     const formatter = new Intl.DateTimeFormat("en-US", {
         hour12: !settings.store["24h Time"],
         timeZone: timezone,
@@ -51,12 +51,29 @@ export async function setUserTimezone(userId: string, timezone: string | null) {
     await DataStore.set(DATASTORE_KEY, timezones);
 }
 
-const TimestampComponent = ErrorBoundary.wrap(({ userId, type }: { userId: string; type: "message" | "profile"; }) => {
+interface Props {
+    userId: string;
+    timestamp?: string;
+    type: "message" | "profile";
+}
+const TimestampComponent = ErrorBoundary.wrap(({ userId, timestamp, type }: Props) => {
+    if (!userId) return null;
+
     const timezone = timezones[userId];
 
     if (!timezone) return null;
 
-    const shortTime = getTime(timezone, { hour: "numeric", minute: "numeric" });
+    const currentTime = timestamp || Date.now();
+
+    const shortTime = getTime(timezone, currentTime, { hour: "numeric", minute: "numeric" });
+    const longTime = getTime(timezone, currentTime, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+    });
     return (
         <Tooltip
             position="top"
@@ -66,14 +83,7 @@ const TimestampComponent = ErrorBoundary.wrap(({ userId, type }: { userId: strin
             spacing={8}
             hideOnClick={true}
             tooltipClassName="timezone-tooltip"
-            text={getTime(timezone, {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-            })}
+            text={longTime}
         >
             {toolTipProps => {
                 return (
@@ -95,7 +105,7 @@ const TimestampComponent = ErrorBoundary.wrap(({ userId, type }: { userId: strin
 export default definePlugin({
     name: "Timezone",
     authors: [Devs.Aria],
-    description: "Shows the local time of users in their status",
+    description: "Shows the local time of users in profiles and message headers",
 
     patches: [
         {
@@ -114,9 +124,21 @@ export default definePlugin({
         }
     ],
     settings,
+    getTime,
 
-    renderProfileTimezone: (props: any) => <TimestampComponent userId={props?.user?.id} type="profile" />,
-    renderMessageTimezone: (props: any) => <TimestampComponent userId={props?.message?.author?.id} type="message" />,
+
+    renderProfileTimezone: (props: { user: User; }) =>
+        <TimestampComponent
+            userId={props?.user?.id}
+            type="profile"
+        />,
+
+    renderMessageTimezone: (props: { message: Message; }) =>
+        <TimestampComponent
+            userId={props?.message?.author?.id}
+            timestamp={props?.message?.timestamp?.toISOString()}
+            type="message"
+        />,
 
     start() {
         addContextMenuPatch("user-context", userContextMenuPatch);
