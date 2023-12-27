@@ -4,13 +4,18 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import * as DataStore from "@api/DataStore";
 import { classNameFactory } from "@api/Styles";
 import { Margins } from "@utils/margins";
 import { ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalProps, ModalRoot } from "@utils/modal";
 import { Button, Forms, SearchableSelect, useMemo, useState } from "@webpack/common";
 
-import { setUserTimezone, timezones } from ".";
+import { DATASTORE_KEY, timezones } from ".";
 
+export async function setUserTimezone(userId: string, timezone: string | null) {
+    timezones[userId] = timezone;
+    await DataStore.set(DATASTORE_KEY, timezones);
+}
 
 const cl = classNameFactory("vc-timezone-");
 

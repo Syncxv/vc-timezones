@@ -14,12 +14,12 @@ import { Devs } from "@utils/constants";
 import { openModal } from "@utils/modal";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy } from "@webpack";
-import { Menu, Tooltip } from "@webpack/common";
+import { Menu, Tooltip, useEffect, useState } from "@webpack/common";
 import { Message, User } from "discord-types/general";
 
 import { SetTimezoneModal } from "./TimezoneModal";
 
-const DATASTORE_KEY = "vencord-timezones";
+export const DATASTORE_KEY = "vencord-timezones";
 
 export let timezones: Record<string, string | null> = {};
 (async () => {
@@ -46,24 +46,33 @@ function getTime(timezone: string, timestamp: string | number, props: Intl.DateT
     return formatter.format(date);
 }
 
-export async function setUserTimezone(userId: string, timezone: string | null) {
-    timezones[userId] = timezone;
-    await DataStore.set(DATASTORE_KEY, timezones);
-}
-
 interface Props {
     userId: string;
     timestamp?: string;
     type: "message" | "profile";
 }
 const TimestampComponent = ErrorBoundary.wrap(({ userId, timestamp, type }: Props) => {
-    if (!userId) return null;
-
+    const [currentTime, setCurrentTime] = useState(timestamp || Date.now());
     const timezone = timezones[userId];
 
-    if (!timezone) return null;
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
 
-    const currentTime = timestamp || Date.now();
+        if (type === "profile") {
+            setCurrentTime(Date.now());
+
+            const now = new Date();
+            const delay = (60 - now.getSeconds()) * 1000 + 1000 - now.getMilliseconds();
+
+            timer = setTimeout(() => {
+                setCurrentTime(Date.now());
+            }, delay);
+        }
+
+        return () => timer && clearTimeout(timer);
+    }, [type, currentTime]);
+
+    if (!timezone) return null;
 
     const shortTime = getTime(timezone, currentTime, { hour: "numeric", minute: "numeric" });
     const longTime = getTime(timezone, currentTime, {
