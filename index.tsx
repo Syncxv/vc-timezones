@@ -34,6 +34,18 @@ export const settings = definePluginSettings({
         description: "Show time in 24h format",
         default: false
     },
+
+    showMessageHeaderTime: {
+        type: OptionType.BOOLEAN,
+        description: "Show time in message headers",
+        default: true
+    },
+
+    showProfileTime: {
+        type: OptionType.BOOLEAN,
+        description: "Show time in profiles",
+        default: true
+    }
 });
 
 function getTime(timezone: string, timestamp: string | number, props: Intl.DateTimeFormatOptions = {}) {
@@ -136,18 +148,24 @@ export default definePlugin({
     getTime,
 
 
-    renderProfileTimezone: (props: { user: User; }) =>
-        <TimestampComponent
-            userId={props?.user?.id}
-            type="profile"
-        />,
+    renderProfileTimezone: (props?: { user?: User; }) => {
+        if (!settings.store.showProfileTime || !props?.user?.id) return null;
 
-    renderMessageTimezone: (props: { message: Message; }) =>
-        <TimestampComponent
-            userId={props?.message?.author?.id}
-            timestamp={props?.message?.timestamp?.toISOString()}
+        return <TimestampComponent
+            userId={props.user.id}
+            type="profile"
+        />;
+    },
+
+    renderMessageTimezone: (props?: { message?: Message; }) => {
+        if (!settings.store.showMessageHeaderTime || !props?.message) return null;
+
+        return <TimestampComponent
+            userId={props.message.author.id}
+            timestamp={props.message.timestamp.toISOString()}
             type="message"
-        />,
+        />;
+    },
 
     start() {
         addContextMenuPatch("user-context", userContextMenuPatch);
