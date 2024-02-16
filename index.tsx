@@ -179,6 +179,8 @@ export default definePlugin({
 
 
 const userContextMenuPatch: NavContextMenuPatchCallback = (children, { user }: { user: User; }) => () => {
+    if (user?.id == null) return;
+
     const setTimezoneItem = (
         <Menu.MenuItem
             label="Set Timezone"
