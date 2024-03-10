@@ -178,7 +178,7 @@ export default definePlugin({
 });
 
 
-const userContextMenuPatch: NavContextMenuPatchCallback = (children, { user }: { user: User; }) => () => {
+const userContextMenuPatch: NavContextMenuPatchCallback = (children, { user }: { user: User; }) => {
     if (user?.id == null) return;
 
     const setTimezoneItem = (
