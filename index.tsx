@@ -130,7 +130,7 @@ export default definePlugin({
 
     patches: [
         {
-            find: "Messages.EDIT_PROFILE,",
+            find: ".NITRO_BANNER,",
             replacement: {
                 match: /getUserBannerStyles.{1,600}children:\[/,
                 replace: "$&$self.renderProfileTimezone(arguments[0]),"
