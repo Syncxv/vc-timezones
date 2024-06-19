@@ -26,7 +26,7 @@ export let timezones: Record<string, string | null> = {};
     timezones = await DataStore.get<Record<string, string>>(DATASTORE_KEY) || {};
 })();
 
-const classes = findByPropsLazy("timestamp", "compact", "content");
+const classes = findByPropsLazy("timestamp", "compact", "contentOnly");
 
 export const settings = definePluginSettings({
     "24h Time": {
@@ -139,7 +139,7 @@ export default definePlugin({
         {
             find: ".badgesContainer,",
             replacement: {
-                match: /id:\(0,\i\.getMessageTimestampId\)\(\i\),timestamp.{1,50}}\),/,
+                match: /id:.{1,11},timestamp.{1,50}}\),/,
                 replace: "$&,$self.renderMessageTimezone(arguments[0]),"
             }
         }
