@@ -129,13 +129,14 @@ export default definePlugin({
     description: "Shows the local time of users in profiles and message headers",
 
     patches: [
-        {
-            find: ".NITRO_BANNER,",
+        // stolen from ViewIcons
+        ...[".NITRO_BANNER,", "=!1,canUsePremiumCustomization:"].map(find => ({
+            find,
             replacement: {
                 match: /(?<=hasProfileEffect.+?)children:\[/,
                 replace: "$&$self.renderProfileTimezone(arguments[0]),"
             }
-        },
+        })),
         {
             find: '"Message Username"',
             replacement: {
