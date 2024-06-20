@@ -1,6 +1,6 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2023 Vendicated and contributors
+ * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -26,7 +26,7 @@ export let timezones: Record<string, string | null> = {};
     timezones = await DataStore.get<Record<string, string>>(DATASTORE_KEY) || {};
 })();
 
-const classes = findByPropsLazy("timestamp", "compact", "content");
+const classes = findByPropsLazy("timestamp", "compact", "contentOnly");
 
 export const settings = definePluginSettings({
     "24h Time": {
@@ -132,14 +132,15 @@ export default definePlugin({
         {
             find: ".NITRO_BANNER,",
             replacement: {
-                match: /getUserBannerStyles.{1,600}children:\[/,
+                match: /(?<=hasProfileEffect.+?)children:\[/,
                 replace: "$&$self.renderProfileTimezone(arguments[0]),"
             }
         },
         {
             find: ".badgesContainer,",
             replacement: {
-                match: /id:\(0,\i\.getMessageTimestampId\)\(\i\),timestamp.{1,50}}\),/,
+                // thanks https://github.com/Syncxv/vc-timezones/pull/4
+                match: /(?<=isVisibleOnlyOnHover.+?)id:.{1,11},timestamp.{1,50}}\),/,
                 replace: "$&,$self.renderMessageTimezone(arguments[0]),"
             }
         }
