@@ -137,7 +137,7 @@ export default definePlugin({
             }
         },
         {
-            find: ".badgesContainer,",
+            find: '"Message Username"',
             replacement: {
                 // thanks https://github.com/Syncxv/vc-timezones/pull/4
                 match: /(?<=isVisibleOnlyOnHover.+?)id:.{1,11},timestamp.{1,50}}\),/,
