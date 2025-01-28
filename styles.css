@@ -2,7 +2,7 @@
     position: absolute;
     right: 0;
     bottom: 0;
-    margin: 28px 16px 4px;
+    margin: 28px 16px 8px;
     background: var(--profile-body-background-color, var(--background-primary));
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
