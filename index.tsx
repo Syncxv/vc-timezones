@@ -133,8 +133,8 @@ export default definePlugin({
         {
             find: 'backgroundColor:"COMPLETE"',
             replacement: {
-                // probably bad
-                match: /(?<="foreignObject",.+?)children:\[/,
+                // maybe bad ?
+                match: /(\.banner,.+?)children:\[/,
                 replace: "$&$self.renderProfileTimezone(arguments[0]),"
             }
         },
