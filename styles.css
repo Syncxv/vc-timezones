@@ -2,12 +2,12 @@
     position: absolute;
     right: 0;
     bottom: 0;
-    margin: 28px 16px 4px;
-    background: var(--profile-body-background-color, var(--background-primary));
+    margin: 28px 16px 6px;
+    background: var(--background-base-lowest);
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
-    color: var(--text-normal);
+    color: var(--text-default);
 }
 
 [class*="topSection"] .timezone-profile-item {
