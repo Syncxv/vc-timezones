@@ -13,7 +13,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import { openModal } from "@utils/modal";
 import definePlugin, { OptionType } from "@utils/types";
-import { findByPropsLazy } from "@webpack";
+import { findCssClassesLazy } from "@webpack";
 import { i18n, Menu, Tooltip, useEffect, useState } from "@webpack/common";
 import { Message, User } from "discord-types/general";
 
@@ -26,7 +26,7 @@ export let timezones: Record<string, string | null> = {};
     timezones = await DataStore.get<Record<string, string>>(DATASTORE_KEY) || {};
 })();
 
-const classes = findByPropsLazy("timestamp", "compact", "contentOnly");
+const classes = findCssClassesLazy("timestamp", "compact", "contentOnly");
 
 export const settings = definePluginSettings({
     "24h Time": {
